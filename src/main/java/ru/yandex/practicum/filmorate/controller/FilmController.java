@@ -25,7 +25,6 @@ public class FilmController {
     @PostMapping
     public Film addFilm(@RequestBody @Valid Film film) {
         log.info("Получен запрос на создание фильма: {}", film);
-        validateFilm(film);
         film.setId(getNextId());
         films.put(film.getId(), film);
         log.info("Фильм успешно создан: {}", film);
@@ -35,7 +34,6 @@ public class FilmController {
     @PutMapping
     public Film updateFilm(@RequestBody @Valid Film film) {
         log.info("Получен запрос на обновление фильма: {}", film);
-        validateFilm(film);
         if (film.getId() == null) {
             String errorMessage = "Требуется указать id фильма";
             log.warn(errorMessage);
@@ -49,14 +47,6 @@ public class FilmController {
         films.put(film.getId(), film);
         log.info("Фильм успешно обновлен: {}", film);
         return film;
-    }
-
-    private void validateFilm(Film film) {
-        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 10, 28))) {
-            String errorMessage = "Дата создания фильма не может быть раньше 28-10-1895: " + film.getReleaseDate();
-            log.error(errorMessage);
-            throw new ValidationException(errorMessage);
-        }
     }
 
     private long getNextId() {

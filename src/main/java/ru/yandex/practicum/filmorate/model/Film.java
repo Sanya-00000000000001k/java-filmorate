@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 import lombok.Data;
+import ru.yandex.practicum.filmorate.validators.ValidReleaseDate;
 
 @Data
 public class Film {
@@ -20,6 +21,7 @@ public class Film {
     private String description;
 
     @NotNull(message = "Дата релиза фильма обязательна")
+    @ValidReleaseDate
     private LocalDate releaseDate;
 
     @Min(value = 0, message = "Продолжительность фильма должна быть положительным числом")

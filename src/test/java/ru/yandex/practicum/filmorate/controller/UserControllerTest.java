@@ -20,11 +20,8 @@ class UserControllerTest {
 
     @Test
     void testFindAllUsers() {
-        User user = new User();
-        user.setEmail("test@example.com");
-        user.setLogin("testLogin");
-        user.setName("Test Name");
-        user.setBirthday(LocalDate.of(1990, 1, 1));
+        User user = new User("test@example.com", "testLogin", "Test Name",
+                LocalDate.of(1990, 1, 1));
         userController.createUser(user);
 
         Collection<User> users = userController.findAll();
@@ -34,10 +31,8 @@ class UserControllerTest {
 
     @Test
     void testCreateUser() {
-        User user = new User();
-        user.setEmail("test@example.com");
-        user.setLogin("testLogin");
-        user.setName("Test Name");
+        User user = new User("test@example.com", "testLogin", "Test Name",
+                LocalDate.of(1990, 1, 1));
         user.setBirthday(LocalDate.of(1990, 1, 1));
 
         User createdUser = userController.createUser(user);
@@ -47,10 +42,8 @@ class UserControllerTest {
 
     @Test
     void testCreateUserWithEmptyName() {
-        User user = new User();
-        user.setEmail("test@example.com");
-        user.setLogin("testLogin");
-        user.setBirthday(LocalDate.of(1990, 1, 1));
+        User user = new User("test@example.com", "testLogin", "",
+                LocalDate.of(1990, 1, 1));
 
         User createdUser = userController.createUser(user);
         assertEquals("testLogin", createdUser.getName());
@@ -58,11 +51,8 @@ class UserControllerTest {
 
     @Test
     void testUpdateUser() {
-        User user = new User();
-        user.setEmail("test@example.com");
-        user.setLogin("testLogin");
-        user.setName("Test Name");
-        user.setBirthday(LocalDate.of(1990, 1, 1));
+        User user = new User("test@example.com", "testLogin", "Test Name",
+                LocalDate.of(1990, 1, 1));
         User createdUser = userController.createUser(user);
 
         createdUser.setEmail("updated@example.com");
