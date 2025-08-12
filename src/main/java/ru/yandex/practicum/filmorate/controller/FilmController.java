@@ -1,7 +1,59 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import ru.yandex.practicum.filmorate.model.Film;
+
+import jakarta.validation.Valid;
+
+import java.util.*;
 
 @RestController
+@RequestMapping("/films")
+@Slf4j
 public class FilmController {
+    private final Map<Long, Film> films = new HashMap<>();
+
+    @GetMapping
+    public List<Film> findAll() {
+        log.info("Запрошены все фильмы");
+        return new ArrayList<>(films.values());
+    }
+
+    @PostMapping
+    public Film addFilm(@RequestBody @Valid Film film) {
+        log.info("Получен запрос на создание фильма: {}", film);
+        film.setId(getNextId());
+        films.put(film.getId(), film);
+        log.info("Фильм успешно создан: {}", film);
+        return film;
+    }
+
+    @PutMapping
+    public Film updateFilm(@RequestBody @Valid Film film) {
+        log.info("Получен запрос на обновление фильма: {}", film);
+        if (film.getId() == null) {
+            String errorMessage = "Требуется указать id фильма";
+            log.warn(errorMessage);
+            throw new ValidationException(errorMessage);
+        }
+        if (!films.containsKey(film.getId())) {
+            String errorMessage = "Фильм с указанным ID не найден: " + film.getId();
+            log.warn(errorMessage);
+            throw new ValidationException(errorMessage);
+        }
+        films.put(film.getId(), film);
+        log.info("Фильм успешно обновлен: {}", film);
+        return film;
+    }
+
+    private long getNextId() {
+        long currentMaxId = films.keySet()
+                .stream()
+                .mapToLong(id -> id)
+                .max()
+                .orElse(0);
+        return ++currentMaxId;
+    }
 }
